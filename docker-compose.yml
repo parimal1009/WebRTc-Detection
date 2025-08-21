@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  object-detection:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: advanced-object-detection
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LANGSMITH_TRACING=true
+      - LANGSMITH_ENDPOINT=https://api.smith.langchain.com
+      - LANGSMITH_API_KEY=${LANGSMITH_API_KEY}
+      - LANGSMITH_PROJECT=${LANGSMITH_PROJECT}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - HF_TOKEN=${HF_TOKEN}
+      - CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-""}
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs
+      - ./models:/app/models
+      - ./static:/app/static
+      - ./templates:/app/templates
+      - model_cache:/root/.cache/huggingface
+      - ultralytics_cache:/root/.config/Ultralytics
+    restart: unless-stopped
+    networks:
+      - detection-network
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Redis for caching (if you want to add caching later)
+  redis:
+    image: redis:7-alpine
+    container_name: detection-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - detection-network
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+  # Optional: Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: detection-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    networks:
+      - detection-network
+    profiles:
+      - monitoring
+
+volumes:
+  model_cache:
+    driver: local
+  ultralytics_cache:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+
+networks:
+  detection-network:
+    driver: bridge

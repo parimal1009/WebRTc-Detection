@@ -1,0 +1,85 @@
+{
+  "median_latency_ms": 55067,
+  "p95_latency_ms": 78791,
+  "p99_latency_ms": 78791,
+  "avg_processing_time_ms": 7139.086151123047,
+  "median_processing_time_ms": 8468.45531463623,
+  "processed_fps": 0.0787816291701556,
+  "current_fps": 11,
+  "total_frames": 10,
+  "duration_seconds": 126.93314552307129,
+  "avg_detections_per_frame": 2.7,
+  "avg_frame_quality": 0.36458303054244445,
+  "uplink_kbps": 1811,
+  "downlink_kbps": 509,
+  "object_frequency": {
+    "person": 20,
+    "laptop": 5,
+    "tv": 2
+  },
+  "model_performance": {
+    "detr-resnet-101+yolos-base": {
+      "avg_latency": 27831.2,
+      "avg_processing_time": 8677.33759880066,
+      "avg_detections": 3,
+      "avg_quality": 0.3048900888727454,
+      "frame_count": 5
+    },
+    "yolos-base": {
+      "avg_latency": 66788.2,
+      "avg_processing_time": 5600.834703445435,
+      "avg_detections": 2.4,
+      "avg_quality": 0.4242759722121435,
+      "frame_count": 5
+    }
+  },
+  "detection_accuracy_trend": {
+    "trend": 0.0,
+    "confidence": 0.5
+  },
+  "system_efficiency": 0.21937490916273333,
+  "active_connections": 0,
+  "total_frames_processed": 0,
+  "avg_frames_per_connection": 0.0,
+  "adaptive_fps": 9,
+  "cache_hit_rate": 1.0,
+  "system_info": {
+    "device": "cpu",
+    "current_models": [
+      "yolos-small"
+    ],
+    "confidence_threshold": 0.5,
+    "timestamp": "2025-08-19T15:36:33.290746",
+    "torch_version": "2.7.1+cpu",
+    "cuda_available": false,
+    "model_count": 5
+  },
+  "performance_analysis": {
+    "efficiency_score": 0.21937490916273333,
+    "accuracy_trend": {
+      "trend": 0.0,
+      "confidence": 0.5
+    },
+    "top_detected_objects": {
+      "person": 20,
+      "laptop": 5,
+      "tv": 2
+    },
+    "model_rankings": {
+      "detr-resnet-101+yolos-base": {
+        "avg_latency": 27831.2,
+        "avg_processing_time": 8677.33759880066,
+        "avg_detections": 3,
+        "avg_quality": 0.3048900888727454,
+        "frame_count": 5
+      },
+      "yolos-base": {
+        "avg_latency": 66788.2,
+        "avg_processing_time": 5600.834703445435,
+        "avg_detections": 2.4,
+        "avg_quality": 0.4242759722121435,
+        "frame_count": 5
+      }
+    }
+  }
+}

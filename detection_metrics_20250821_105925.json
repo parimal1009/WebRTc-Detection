@@ -1,0 +1,109 @@
+{
+  "median_latency_ms": 44498.0,
+  "p95_latency_ms": 135942.09999999998,
+  "p99_latency_ms": 153822.12,
+  "avg_processing_time_ms": 699.0970567679306,
+  "processed_fps": 1.2222538258352413,
+  "current_fps": 0.5513129154823323,
+  "total_frames": 239,
+  "duration_seconds": 195.5403983592987,
+  "avg_detections_per_frame": 0.4811715481171548,
+  "max_detections_per_frame": 3,
+  "uplink_kbps": 2562,
+  "downlink_kbps": 880,
+  "model_performance": {
+    "ensemble": {
+      "avg_time_ms": 8052.190780639648,
+      "frames_processed": 1
+    },
+    "yolov8m": {
+      "avg_time_ms": 470.5775509709897,
+      "frames_processed": 46
+    },
+    "yolov8s": {
+      "avg_time_ms": 234.07643906613615,
+      "frames_processed": 141
+    },
+    "rt-detr-l": {
+      "avg_time_ms": 2046.6796183118634,
+      "frames_processed": 51
+    }
+  },
+  "top_detected_classes": {
+    "person": 102,
+    "Here are the improved labels:": 5,
+    "* Tablet": 2,
+    "book": 2,
+    "* Telephone book": 1,
+    "* 'hardcover book'": 1,
+    "Apple iPhone": 1,
+    "* Textbook": 1
+  },
+  "confidence_stats": {
+    "person": {
+      "avg_confidence": 0.8922247454231861,
+      "min_confidence": 0.8002819418907166,
+      "max_confidence": 0.9527469277381897
+    },
+    "* Telephone book": {
+      "avg_confidence": 0.6947376489639282,
+      "min_confidence": 0.6947376489639282,
+      "max_confidence": 0.6947376489639282
+    },
+    "* Tablet": {
+      "avg_confidence": 0.6703294575214386,
+      "min_confidence": 0.6134279727935791,
+      "max_confidence": 0.7272309422492981
+    },
+    "Here are the improved labels:": {
+      "avg_confidence": 0.6424129009246826,
+      "min_confidence": 0.6145769715309143,
+      "max_confidence": 0.6776440501213074
+    },
+    "* 'hardcover book'": {
+      "avg_confidence": 0.6318629741668701,
+      "min_confidence": 0.6318629741668701,
+      "max_confidence": 0.6318629741668701
+    },
+    "book": {
+      "avg_confidence": 0.7204509973526001,
+      "min_confidence": 0.7136120200157166,
+      "max_confidence": 0.7272899746894836
+    },
+    "Apple iPhone": {
+      "avg_confidence": 0.6142245888710022,
+      "min_confidence": 0.6142245888710022,
+      "max_confidence": 0.6142245888710022
+    },
+    "* Textbook": {
+      "avg_confidence": 0.6181466937065124,
+      "min_confidence": 0.6181466937065124,
+      "max_confidence": 0.6181466937065124
+    }
+  },
+  "system_info": {
+    "device": "cpu",
+    "current_model": "rt-detr-l",
+    "confidence_threshold": 0.3,
+    "nms_threshold": 0.45,
+    "total_models_loaded": 13,
+    "available_models": [
+      "yolov8n",
+      "yolov8s",
+      "yolov8m",
+      "yolov10n",
+      "detr-resnet-50",
+      "detr-resnet-101",
+      "rt-detr-l",
+      "yolos-tiny",
+      "yolos-small",
+      "conditional-detr",
+      "hf-api-yolov8",
+      "hf-api-detr",
+      "hf-api-deta"
+    ],
+    "timestamp": "2025-08-21T10:59:25.892377",
+    "torch_cuda_available": false,
+    "groq_available": true
+  }
+}

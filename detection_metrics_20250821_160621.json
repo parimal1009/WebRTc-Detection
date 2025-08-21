@@ -1,0 +1,297 @@
+{
+  "median_latency_ms": 41637.5,
+  "p95_latency_ms": 131640.00000000003,
+  "p99_latency_ms": 157469.13000000003,
+  "avg_processing_time_ms": 2623.42028255048,
+  "processed_fps": 0.12278387619591366,
+  "current_fps": 0.23203441221822135,
+  "total_frames": 92,
+  "duration_seconds": 749.2840497493744,
+  "avg_detections_per_frame": 4.054347826086956,
+  "max_detections_per_frame": 10,
+  "uplink_kbps": 2380,
+  "downlink_kbps": 634,
+  "model_performance": {
+    "rt-detr-l": {
+      "avg_time_ms": 2040.0095690380442,
+      "frames_processed": 44
+    },
+    "detr-resnet-50": {
+      "avg_time_ms": 2945.7383911784104,
+      "frames_processed": 41
+    },
+    "detr-resnet-101": {
+      "avg_time_ms": 4402.710131236485,
+      "frames_processed": 7
+    }
+  },
+  "top_detected_classes": {
+    "person": 144,
+    "laptop": 59,
+    "chair": 29,
+    "Here are the improved labels:": 23,
+    "Tablet": 16,
+    "Woman": 13,
+    "backpack": 13,
+    "tv": 9,
+    "Child": 7,
+    "Here are the suggested more accurate labels for the uncertain detections:": 5
+  },
+  "confidence_stats": {
+    "person": {
+      "avg_confidence": 0.9212642957766851,
+      "min_confidence": 0.5073254108428955,
+      "max_confidence": 0.999576985836029
+    },
+    "Here are the improved labels:": {
+      "avg_confidence": 0.7178991457690362,
+      "min_confidence": 0.6084191560745239,
+      "max_confidence": 0.7993115544319153
+    },
+    "Handphone": {
+      "avg_confidence": 0.7001693606376648,
+      "min_confidence": 0.7001693606376648,
+      "max_confidence": 0.7001693606376648
+    },
+    "Pedestrian": {
+      "avg_confidence": 0.6362578928470611,
+      "min_confidence": 0.601443862915039,
+      "max_confidence": 0.6710719227790832
+    },
+    "Child": {
+      "avg_confidence": 0.7153217383793421,
+      "min_confidence": 0.6138755440711975,
+      "max_confidence": 0.7695989966392517
+    },
+    "Woman": {
+      "avg_confidence": 0.6841688467906071,
+      "min_confidence": 0.6083115696907043,
+      "max_confidence": 0.7917735338211059
+    },
+    "* Dog": {
+      "avg_confidence": 0.7646979451179504,
+      "min_confidence": 0.7646979451179504,
+      "max_confidence": 0.7646979451179504
+    },
+    "cell phone": {
+      "avg_confidence": 0.8171574175357819,
+      "min_confidence": 0.7201816439628601,
+      "max_confidence": 0.9141331911087036
+    },
+    "Tablet": {
+      "avg_confidence": 0.7060587130486965,
+      "min_confidence": 0.6022926926612854,
+      "max_confidence": 0.7970256567001343
+    },
+    "Handbag": {
+      "avg_confidence": 0.6730057060718536,
+      "min_confidence": 0.6151921510696411,
+      "max_confidence": 0.7332995891571045
+    },
+    "laptop": {
+      "avg_confidence": 0.885154972642155,
+      "min_confidence": 0.6179009079933167,
+      "max_confidence": 0.9945778846740723
+    },
+    "Here are the suggested more accurate labels:": {
+      "avg_confidence": 0.7393561363220215,
+      "min_confidence": 0.7393561363220215,
+      "max_confidence": 0.7393561363220215
+    },
+    "backpack": {
+      "avg_confidence": 0.7665970921516418,
+      "min_confidence": 0.5520212054252625,
+      "max_confidence": 0.9043275117874146
+    },
+    "Tote bag": {
+      "avg_confidence": 0.6955401261647541,
+      "min_confidence": 0.6031858086585998,
+      "max_confidence": 0.745931601524353
+    },
+    "Backpack: Bagpack": {
+      "avg_confidence": 0.6984589457511902,
+      "min_confidence": 0.6984589457511902,
+      "max_confidence": 0.6984589457511902
+    },
+    "Person: Woman": {
+      "avg_confidence": 0.6820117890834808,
+      "min_confidence": 0.6433758497238159,
+      "max_confidence": 0.7206477284431457
+    },
+    "Table": {
+      "avg_confidence": 0.7256197243928909,
+      "min_confidence": 0.6420019030570984,
+      "max_confidence": 0.786456561088562
+    },
+    "Bicycle helmet": {
+      "avg_confidence": 0.6193365812301636,
+      "min_confidence": 0.6193365812301636,
+      "max_confidence": 0.6193365812301636
+    },
+    "Notebook": {
+      "avg_confidence": 0.7280175298452377,
+      "min_confidence": 0.6888144373893738,
+      "max_confidence": 0.7793035864830017
+    },
+    "Smartphone": {
+      "avg_confidence": 0.6864307284355163,
+      "min_confidence": 0.6864307284355163,
+      "max_confidence": 0.6864307284355163
+    },
+    "Hand": {
+      "avg_confidence": 0.6542821288108825,
+      "min_confidence": 0.6542821288108825,
+      "max_confidence": 0.6542821288108825
+    },
+    "Here are the suggested more accurate labels for the uncertain detections:": {
+      "avg_confidence": 0.7193449974060059,
+      "min_confidence": 0.6445544719696045,
+      "max_confidence": 0.7654831171035766
+    },
+    "man": {
+      "avg_confidence": 0.6046151876449585,
+      "min_confidence": 0.6046151876449585,
+      "max_confidence": 0.6046151876449585
+    },
+    "Bicycle": {
+      "avg_confidence": 0.714442507425944,
+      "min_confidence": 0.639689302444458,
+      "max_confidence": 0.7835687756538391
+    },
+    "Backpack": {
+      "avg_confidence": 0.6735726952552795,
+      "min_confidence": 0.6735726952552795,
+      "max_confidence": 0.6735726952552795
+    },
+    "chair": {
+      "avg_confidence": 0.8975265724905606,
+      "min_confidence": 0.5313903093338013,
+      "max_confidence": 0.9832751154899597
+    },
+    "Messenger bag": {
+      "avg_confidence": 0.6595639944076538,
+      "min_confidence": 0.6595639944076538,
+      "max_confidence": 0.6595639944076538
+    },
+    "Stool": {
+      "avg_confidence": 0.6339504480361938,
+      "min_confidence": 0.6339504480361938,
+      "max_confidence": 0.6339504480361938
+    },
+    "Shade": {
+      "avg_confidence": 0.6010873079299927,
+      "min_confidence": 0.6010873079299927,
+      "max_confidence": 0.6010873079299927
+    },
+    "Person": {
+      "avg_confidence": 0.6947195887565613,
+      "min_confidence": 0.6947195887565613,
+      "max_confidence": 0.6947195887565613
+    },
+    "Hairbrush": {
+      "avg_confidence": 0.6017550587654114,
+      "min_confidence": 0.6017550587654114,
+      "max_confidence": 0.6017550587654114
+    },
+    "Desk": {
+      "avg_confidence": 0.6256834030151367,
+      "min_confidence": 0.6256834030151367,
+      "max_confidence": 0.6256834030151367
+    },
+    "Backpack \u2192 Rucksack": {
+      "avg_confidence": 0.6197293162345886,
+      "min_confidence": 0.6197293162345886,
+      "max_confidence": 0.6197293162345886
+    },
+    "tv": {
+      "avg_confidence": 0.8648553424411349,
+      "min_confidence": 0.7458396553993225,
+      "max_confidence": 0.9712685942649841
+    },
+    "Dog": {
+      "avg_confidence": 0.6050944089889526,
+      "min_confidence": 0.604982054233551,
+      "max_confidence": 0.6052067637443542
+    },
+    "Laptop": {
+      "avg_confidence": 0.7147817969322204,
+      "min_confidence": 0.6363994836807251,
+      "max_confidence": 0.7931641101837158
+    },
+    "clock": {
+      "avg_confidence": 0.7862120270729065,
+      "min_confidence": 0.7862120270729065,
+      "max_confidence": 0.7862120270729065
+    },
+    "TV": {
+      "avg_confidence": 0.6179166793823242,
+      "min_confidence": 0.6179166793823242,
+      "max_confidence": 0.6179166793823242
+    },
+    "iPhone": {
+      "avg_confidence": 0.6945741534233093,
+      "min_confidence": 0.6945741534233093,
+      "max_confidence": 0.6945741534233093
+    },
+    "Backpack: Rucksack": {
+      "avg_confidence": 0.7340338885784149,
+      "min_confidence": 0.7074553728103637,
+      "max_confidence": 0.760612404346466
+    },
+    "Couch: Sofa": {
+      "avg_confidence": 0.7164944767951965,
+      "min_confidence": 0.7164944767951965,
+      "max_confidence": 0.7164944767951965
+    },
+    "Backpack \u2192 Daypack": {
+      "avg_confidence": 0.6513302683830261,
+      "min_confidence": 0.6513302683830261,
+      "max_confidence": 0.6513302683830261
+    },
+    "Wall clock": {
+      "avg_confidence": 0.6787727832794189,
+      "min_confidence": 0.6787727832794189,
+      "max_confidence": 0.6787727832794189
+    },
+    "donut": {
+      "avg_confidence": 0.9134417772293091,
+      "min_confidence": 0.9134417772293091,
+      "max_confidence": 0.9134417772293091
+    },
+    "Fridge": {
+      "avg_confidence": 0.7268960833549499,
+      "min_confidence": 0.7268960833549499,
+      "max_confidence": 0.7268960833549499
+    },
+    "Duffel bag": {
+      "avg_confidence": 0.7300244331359863,
+      "min_confidence": 0.7300244331359863,
+      "max_confidence": 0.7300244331359863
+    }
+  },
+  "system_info": {
+    "device": "cpu",
+    "current_model": "detr-resnet-101",
+    "confidence_threshold": 0.3,
+    "nms_threshold": 0.45,
+    "total_models_loaded": 13,
+    "available_models": [
+      "yolov8n",
+      "yolov8s",
+      "yolov8m",
+      "yolov10n",
+      "detr-resnet-50",
+      "detr-resnet-101",
+      "rt-detr-l",
+      "yolos-tiny",
+      "yolos-small",
+      "conditional-detr",
+      "hf-api-yolov8",
+      "hf-api-detr",
+      "hf-api-deta"
+    ],
+    "timestamp": "2025-08-21T16:06:21.563878",
+    "torch_cuda_available": false,
+    "groq_available": true
+  }
+}

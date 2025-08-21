@@ -1,0 +1,71 @@
+{
+  "median_latency_ms": 21392,
+  "p95_latency_ms": 21392,
+  "p99_latency_ms": 21392,
+  "avg_processing_time_ms": 7014.636754989624,
+  "median_processing_time_ms": 7014.636754989624,
+  "processed_fps": 0.01641240679884252,
+  "current_fps": 0.0,
+  "total_frames": 1,
+  "duration_seconds": 60.92951583862305,
+  "avg_detections_per_frame": 11,
+  "avg_frame_quality": 0.504091682352891,
+  "uplink_kbps": 1718,
+  "downlink_kbps": 1023,
+  "object_frequency": {
+    "person": 7,
+    "cell phone": 3,
+    "chair": 1
+  },
+  "model_performance": {
+    "yolos-base": {
+      "avg_latency": 21392,
+      "avg_processing_time": 7014.636754989624,
+      "avg_detections": 11,
+      "avg_quality": 0.504091682352891,
+      "frame_count": 1
+    }
+  },
+  "detection_accuracy_trend": {
+    "trend": 0.0,
+    "confidence": 0.0
+  },
+  "system_efficiency": 0.1512275047058673,
+  "active_connections": 1,
+  "total_frames_processed": 1,
+  "avg_frames_per_connection": 1.0,
+  "adaptive_fps": 15,
+  "cache_hit_rate": 3.0,
+  "system_info": {
+    "device": "cpu",
+    "current_models": [
+      "yolos-small"
+    ],
+    "confidence_threshold": 0.55,
+    "timestamp": "2025-08-19T14:48:13.132015",
+    "torch_version": "2.7.1+cpu",
+    "cuda_available": false,
+    "model_count": 5
+  },
+  "performance_analysis": {
+    "efficiency_score": 0.1512275047058673,
+    "accuracy_trend": {
+      "trend": 0.0,
+      "confidence": 0.0
+    },
+    "top_detected_objects": {
+      "person": 7,
+      "cell phone": 3,
+      "chair": 1
+    },
+    "model_rankings": {
+      "yolos-base": {
+        "avg_latency": 21392,
+        "avg_processing_time": 7014.636754989624,
+        "avg_detections": 11,
+        "avg_quality": 0.504091682352891,
+        "frame_count": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "median_latency_ms": 65485,
+  "p95_latency_ms": 103893,
+  "p99_latency_ms": 108353,
+  "avg_processing_time_ms": 3890.42916148901,
+  "median_processing_time_ms": 3863.962173461914,
+  "processed_fps": 0.23718878303983063,
+  "current_fps": 5,
+  "total_frames": 32,
+  "duration_seconds": 134.9136312007904,
+  "avg_detections_per_frame": 7.96875,
+  "avg_frame_quality": 0.5110848152260964,
+  "uplink_kbps": 2391,
+  "downlink_kbps": 765,
+  "object_frequency": {
+    "person": 172,
+    "cell phone": 61,
+    "chair": 20,
+    "cup": 1,
+    "keyboard": 1
+  },
+  "model_performance": {
+    "yolos-base": {
+      "avg_latency": 21392,
+      "avg_processing_time": 7014.636754989624,
+      "avg_detections": 11,
+      "avg_quality": 0.504091682352891,
+      "frame_count": 1
+    },
+    "rt-detr-l": {
+      "avg_latency": 27873,
+      "avg_processing_time": 4530.13014793396,
+      "avg_detections": 5.5,
+      "avg_quality": 0.5318308910172047,
+      "frame_count": 2
+    },
+    "yolos-small": {
+      "avg_latency": 65823.55172413793,
+      "avg_processing_time": 3738.580555751406,
+      "avg_detections": 8.03448275862069,
+      "avg_quality": 0.5098951938913029,
+      "frame_count": 29
+    }
+  },
+  "detection_accuracy_trend": {
+    "trend": 0.10666666666666676,
+    "confidence": 1.0
+  },
+  "system_efficiency": 0.2033254445678289,
+  "active_connections": 0,
+  "total_frames_processed": 0,
+  "avg_frames_per_connection": 0.0,
+  "adaptive_fps": 5,
+  "cache_hit_rate": 1.0,
+  "system_info": {
+    "device": "cpu",
+    "current_models": [
+      "rt-detr-l"
+    ],
+    "confidence_threshold": 0.55,
+    "timestamp": "2025-08-19T14:49:27.119239",
+    "torch_version": "2.7.1+cpu",
+    "cuda_available": false,
+    "model_count": 5
+  },
+  "performance_analysis": {
+    "efficiency_score": 0.2033254445678289,
+    "accuracy_trend": {
+      "trend": 0.10666666666666676,
+      "confidence": 1.0
+    },
+    "top_detected_objects": {
+      "person": 172,
+      "cell phone": 61,
+      "chair": 20,
+      "cup": 1,
+      "keyboard": 1
+    },
+    "model_rankings": {
+      "yolos-base": {
+        "avg_latency": 21392,
+        "avg_processing_time": 7014.636754989624,
+        "avg_detections": 11,
+        "avg_quality": 0.504091682352891,
+        "frame_count": 1
+      },
+      "rt-detr-l": {
+        "avg_latency": 27873,
+        "avg_processing_time": 4530.13014793396,
+        "avg_detections": 5.5,
+        "avg_quality": 0.5318308910172047,
+        "frame_count": 2
+      },
+      "yolos-small": {
+        "avg_latency": 65823.55172413793,
+        "avg_processing_time": 3738.580555751406,
+        "avg_detections": 8.03448275862069,
+        "avg_quality": 0.5098951938913029,
+        "frame_count": 29
+      }
+    }
+  }
+}

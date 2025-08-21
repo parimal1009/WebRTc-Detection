@@ -1,0 +1,1916 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Ultra-Advanced Object Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #00ff88, #00d4ff, #ff00ff);
+            border-radius: 2px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { opacity: 0.5; transform: translateX(-50%) scale(1); }
+            to { opacity: 1; transform: translateX(-50%) scale(1.1); }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #00ff88, #00d4ff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            color: #a0a0a0;
+        }
+
+        .controls {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .control-row {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 150px;
+        }
+
+        .control-group label {
+            font-size: 0.95em;
+            opacity: 0.9;
+            font-weight: 500;
+            color: #b0b0b0;
+        }
+
+        select, input, button {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.2);
+        }
+
+        select option {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        button {
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.3);
+        }
+
+        button:disabled {
+            background: rgba(255,255,255,0.2);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #ffa502, #ff6348);
+        }
+
+        .btn-warning:hover {
+            box-shadow: 0 10px 25px rgba(255, 165, 2, 0.4);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .video-container {
+            background: rgba(0,0,0,0.4);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            min-height: 600px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        #videoElement {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            background: #000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .overlay-canvas {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            pointer-events: none;
+            border-radius: 15px;
+            z-index: 10;
+        }
+
+        .video-stats {
+            position: absolute;
+            top: 35px;
+            right: 35px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            z-index: 20;
+            min-width: 200px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #00ff88;
+        }
+
+        .stat-value {
+            color: white;
+            font-weight: bold;
+        }
+
+        .status-panel {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            height: fit-content;
+        }
+
+        .status-panel h3 {
+            color: #00ff88;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .status-item:hover {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-value {
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .status-good { 
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.5));
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .status-warning { 
+            background: linear-gradient(45deg, rgba(255, 152, 0, 0.3), rgba(255, 152, 0, 0.5));
+            box-shadow: 0 0 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .status-error { 
+            background: linear-gradient(45deg, rgba(244, 67, 54, 0.3), rgba(244, 67, 54, 0.5));
+            box-shadow: 0 0 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .metrics-panel {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .metrics-panel h3 {
+            color: #00d4ff;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .metric-card:hover::before {
+            left: 100%;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+
+        .metric-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-label {
+            font-size: 0.95em;
+            opacity: 0.8;
+            color: #c0c0c0;
+        }
+
+        .detection-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .detection-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .detection-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 8px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .detection-item:last-child {
+            border-bottom: none;
+        }
+
+        .detection-label {
+            font-weight: 500;
+            color: #00ff88;
+        }
+
+        .detection-confidence {
+            background: rgba(0, 212, 255, 0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .logs {
+            background: rgba(0,0,0,0.4);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .logs h3 {
+            color: #ff00ff;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .log-entry {
+            padding: 8px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            animation: fadeInLog 0.5s ease-in;
+        }
+
+        @keyframes fadeInLog {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .log-info { color: #00ff88; }
+        .log-warning { color: #ffa502; }
+        .log-error { color: #ff4757; }
+
+        .quality-indicator {
+            position: absolute;
+            top: 35px;
+            left: 35px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 20;
+            min-width: 180px;
+        }
+
+        .quality-metric {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .quality-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .quality-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4757, #ffa502, #00ff88);
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+
+        .detection-confidence-high { color: #00ff88; }
+        .detection-confidence-medium { color: #ffa502; }
+        .detection-confidence-low { color: #ff4757; }
+
+        .advanced-stats {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-card h4 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .class-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .class-tag {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .qr-section {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 25px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        #qrcode {
+            margin: 20px auto;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #00ff88;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            animation: slideIn 0.5s ease-out;
+            max-width: 350px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .notification-success {
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.9), rgba(76, 175, 80, 0.7));
+            border: 1px solid #4CAF50;
+        }
+
+        .notification-error {
+            background: linear-gradient(45deg, rgba(244, 67, 54, 0.9), rgba(244, 67, 54, 0.7));
+            border: 1px solid #f44336;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            border-radius: 4px;
+        }
+
+        .confidence-display {
+            background: linear-gradient(90deg, #ff4757 0%, #ffa502 50%, #00ff88 100%);
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 5px;
+            position: relative;
+        }
+
+        .confidence-marker {
+            position: absolute;
+            top: -2px;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            border: 2px solid #00ff88;
+            transform: translateX(-50%);
+            transition: left 0.3s ease;
+        }
+
+        .model-indicator {
+            position: absolute;
+            bottom: 35px;
+            right: 35px;
+            background: rgba(0,0,0,0.8);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            z-index: 20;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .ensemble-badge {
+            background: linear-gradient(45deg, #ff00ff, #00ff88);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .control-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .video-stats, .model-indicator, .quality-indicator {
+                position: static;
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Ultra-Advanced Object Detection</h1>
+            <p>Real-time multi-model ensemble detection with perfect bounding boxes and dynamic recognition</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-row">
+                <div class="control-group">
+                    <label for="modelSelect">🤖 Detection Model:</label>
+                    <select id="modelSelect">
+                        <option value="ensemble">🔥 Ensemble (Best Accuracy)</option>
+                        <option value="yolov8m">⚡ YOLOv8 Medium</option>
+                        <option value="yolov8s">⚡ YOLOv8 Small</option>
+                        <option value="detr-resnet-101">🎯 DETR ResNet-101</option>
+                        <option value="detr-resnet-50">🎯 DETR ResNet-50</option>
+                        <option value="yolos-small">🔍 YOLOS Small</option>
+                        <option value="rt-detr-l">🚀 RT-DETR Large</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="confidenceSlider">🎚️ Confidence: <span id="confidenceValue">0.50</span></label>
+                    <input type="range" id="confidenceSlider" min="0.05" max="1.0" step="0.05" value="0.50">
+                    <div class="confidence-display">
+                        <div class="confidence-marker" id="confidenceMarker"></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="targetSizeSelect">📐 Processing Size:</label>
+                    <select id="targetSizeSelect">
+                        <option value="640">640px (Fast)</option>
+                        <option value="800" selected>800px (Balanced)</option>
+                        <option value="1024">1024px (High Quality)</option>
+                        <option value="1280">1280px (Maximum)</option>
+                    </select>
+                </div>
+
+                <button id="startBtn">🚀 Start Detection</button>
+                <button id="stopBtn" disabled>⏹️ Stop</button>
+                <button id="resetMetricsBtn" class="btn-warning">🔄 Reset Metrics</button>
+                <button id="saveMetricsBtn" class="btn-danger">💾 Save Data</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="video-container">
+                <video id="videoElement" autoplay muted playsinline></video>
+                <canvas id="overlayCanvas" class="overlay-canvas"></canvas>
+                
+                <div class="quality-indicator" id="qualityIndicator">
+                    <div class="quality-metric">
+                        <span>Detection Quality:</span>
+                        <span id="qualityScore">--</span>
+                    </div>
+                    <div class="quality-metric">
+                        <span>Objects Found:</span>
+                        <span id="objectCount">0</span>
+                    </div>
+                    <div class="quality-metric">
+                        <span>Avg Confidence:</span>
+                        <span id="avgConfidence">--</span>
+                    </div>
+                    <div class="quality-bar">
+                        <div class="quality-fill" id="qualityFill"></div>
+                    </div>
+                </div>
+
+                <div class="video-stats" id="videoStats">
+                    <div class="stat-row">
+                        <span class="stat-label">Resolution:</span>
+                        <span class="stat-value" id="resolution">--</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">FPS:</span>
+                        <span class="stat-value" id="realTimeFps">--</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Latency:</span>
+                        <span class="stat-value" id="realTimeLatency">-- ms</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Processing:</span>
+                        <span class="stat-value" id="processingTime">-- ms</span>
+                    </div>
+                </div>
+
+                <div class="model-indicator" id="modelIndicator">
+                    <span>Model: </span>
+                    <span id="currentModelDisplay">ensemble</span>
+                </div>
+            </div>
+
+            <div class="status-panel">
+                <h3>📊 Live Status</h3>
+                <div class="status-item">
+                    <span>🔗 Connection:</span>
+                    <span id="connectionStatus" class="status-value status-error">Disconnected</span>
+                </div>
+                <div class="status-item">
+                    <span>🤖 Active Model:</span>
+                    <span id="currentModel" class="status-value">ensemble</span>
+                </div>
+                <div class="status-item">
+                    <span>⚡ Performance:</span>
+                    <span id="performanceStatus" class="status-value">--</span>
+                </div>
+                <div class="status-item">
+                    <span>🎯 Detection Rate:</span>
+                    <span id="detectionRate" class="status-value">--</span>
+                </div>
+                <div class="status-item">
+                    <span>🔍 Unique Classes:</span>
+                    <span id="uniqueClasses" class="status-value">0</span>
+                </div>
+
+                <h4 style="margin-top: 25px; color: #00ff88;">🎯 Live Detections</h4>
+                <div id="detectionList" class="detection-list"></div>
+            </div>
+        </div>
+
+        <div class="metrics-panel">
+            <h3>📈 Advanced Performance Metrics</h3>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div id="medianLatency" class="metric-value">--</div>
+                    <div class="metric-label">Median Latency (ms)</div>
+                </div>
+                <div class="metric-card">
+                    <div id="p95Latency" class="metric-value">--</div>
+                    <div class="metric-label">P95 Latency (ms)</div>
+                </div>
+                <div class="metric-card">
+                    <div id="avgFps" class="metric-value">--</div>
+                    <div class="metric-label">Average FPS</div>
+                </div>
+                <div class="metric-card">
+                    <div id="totalFrames" class="metric-value">--</div>
+                    <div class="metric-label">Total Frames</div>
+                </div>
+                <div class="metric-card">
+                    <div id="detectionAccuracy" class="metric-value">--</div>
+                    <div class="metric-label">Detection Accuracy</div>
+                </div>
+                <div class="metric-card">
+                    <div id="totalObjects" class="metric-value">--</div>
+                    <div class="metric-label">Objects Detected</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="advanced-stats">
+            <h3>🔬 Detection Analytics</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>📊 Class Distribution</h4>
+                    <div id="classDistribution" class="class-list"></div>
+                </div>
+                <div class="stat-card">
+                    <h4>⚡ Model Performance</h4>
+                    <div id="modelPerformanceStats"></div>
+                </div>
+                <div class="stat-card">
+                    <h4>🎯 Confidence Analysis</h4>
+                    <div id="confidenceStats"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="qr-section">
+            <h3>📱 Mobile Connection</h3>
+            <p>Scan with your phone for mobile detection:</p>
+            <div id="qrcode"></div>
+            <p><strong>URL:</strong> <span id="connectionUrl"></span></p>
+            <p><em>Ensure both devices are on the same network for optimal performance</em></p>
+        </div>
+
+        <div class="logs">
+            <h3>📝 System Activity Logs</h3>
+            <div id="logContainer"></div>
+        </div>
+    </div>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+
+    <script>
+        class UltraAdvancedDetectionClient {
+            constructor() {
+                this.ws = null;
+                this.stream = null;
+                this.isStreaming = false;
+                this.frameId = 0;
+                this.captureInterval = null;
+                this.targetFps = 20; // Higher FPS for better accuracy
+                this.frameQueue = [];
+                this.maxQueueSize = 3; // Smaller queue for lower latency
+                this.targetSize = 800;
+                
+                // Performance tracking
+                this.performanceStats = {
+                    framesSent: 0,
+                    framesProcessed: 0,
+                    totalLatency: 0,
+                    detectionHistory: [],
+                    classHistory: new Set(),
+                    confidenceHistory: []
+                };
+                
+                this.videoElement = document.getElementById('videoElement');
+                this.canvas = document.getElementById('overlayCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                
+                // Enhanced canvas settings for perfect bounding boxes
+                this.ctx.imageSmoothingEnabled = true;
+                this.ctx.imageSmoothingQuality = 'high';
+                
+                this.initializeUI();
+                this.setupEventListeners();
+                this.generateQRCode();
+                this.startMetricsUpdate();
+            }
+
+            initializeUI() {
+                this.updateConnectionStatus('Disconnected', 'status-error');
+                this.log('🚀 Ultra-Advanced Detection System Initialized', 'info');
+                this.updateConfidenceMarker();
+            }
+
+            setupEventListeners() {
+                // UI Controls
+                document.getElementById('startBtn').addEventListener('click', () => this.startCamera());
+                document.getElementById('stopBtn').addEventListener('click', () => this.stopCamera());
+                document.getElementById('resetMetricsBtn').addEventListener('click', () => this.resetMetrics());
+                document.getElementById('saveMetricsBtn').addEventListener('click', () => this.saveMetrics());
+
+                // Model selection
+                document.getElementById('modelSelect').addEventListener('change', (e) => {
+                    this.changeModel(e.target.value);
+                });
+
+                // Target size selection
+                document.getElementById('targetSizeSelect').addEventListener('change', (e) => {
+                    this.targetSize = parseInt(e.target.value);
+                    this.log(`🔧 Processing size changed to ${this.targetSize}px`, 'info');
+                });
+
+                // Enhanced confidence slider
+                const slider = document.getElementById('confidenceSlider');
+                slider.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    document.getElementById('confidenceValue').textContent = value.toFixed(2);
+                    this.updateConfidenceMarker();
+                    this.changeConfidence(value);
+                });
+
+                // Video element events
+                this.videoElement.addEventListener('loadedmetadata', () => {
+                    this.setupCanvas();
+                    this.updateVideoStats();
+                });
+
+                this.videoElement.addEventListener('resize', () => {
+                    this.setupCanvas();
+                });
+            }
+
+            updateConfidenceMarker() {
+                const slider = document.getElementById('confidenceSlider');
+                const marker = document.getElementById('confidenceMarker');
+                const percentage = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+                marker.style.left = `${percentage}%`;
+            }
+
+            updateVideoStats() {
+                const video = this.videoElement;
+                if (video.videoWidth && video.videoHeight) {
+                    document.getElementById('resolution').textContent = `${video.videoWidth}×${video.videoHeight}`;
+                }
+            }
+
+            generateQRCode() {
+                const url = window.location.href;
+                document.getElementById('connectionUrl').textContent = url;
+                
+                QRCode.toCanvas(document.getElementById('qrcode'), url, {
+                    width: 220,
+                    margin: 2,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    },
+                    errorCorrectionLevel: 'M'
+                }, (error) => {
+                    if (error) {
+                        this.log(`❌ QR Code error: ${error}`, 'error');
+                    } else {
+                        this.log('✅ QR Code generated successfully', 'info');
+                    }
+                });
+            }
+
+            setupCanvas() {
+                const video = this.videoElement;
+                this.canvas.width = video.videoWidth || 640;
+                this.canvas.height = video.videoHeight || 480;
+                this.canvas.style.width = video.offsetWidth + 'px';
+                this.canvas.style.height = video.offsetHeight + 'px';
+                
+                // Enhanced canvas quality
+                this.ctx.imageSmoothingEnabled = true;
+                this.ctx.imageSmoothingQuality = 'high';
+            }
+
+            async startCamera() {
+                try {
+                    this.log('📷 Requesting high-quality camera access...', 'info');
+                    
+                    const constraints = {
+                        video: {
+                            width: { ideal: 1280, min: 640 },
+                            height: { ideal: 720, min: 480 },
+                            frameRate: { ideal: this.targetFps, min: 15 },
+                            facingMode: 'environment',
+                            // Request higher quality settings
+                            aspectRatio: { ideal: 16/9 }
+                        },
+                        audio: false
+                    };
+
+                    this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    this.videoElement.srcObject = this.stream;
+                    
+                    document.getElementById('startBtn').disabled = true;
+                    document.getElementById('stopBtn').disabled = false;
+                    
+                    this.log('✅ High-quality camera started successfully', 'info');
+                    this.connectWebSocket();
+                    
+                } catch (error) {
+                    this.log(`❌ Camera error: ${error.message}`, 'error');
+                    this.updateConnectionStatus('Camera Error', 'status-error');
+                    this.showNotification('Camera access failed. Please check permissions.', 'error');
+                }
+            }
+
+            stopCamera() {
+                if (this.stream) {
+                    this.stream.getTracks().forEach(track => track.stop());
+                    this.stream = null;
+                }
+                
+                this.videoElement.srcObject = null;
+                this.isStreaming = false;
+                
+                if (this.captureInterval) {
+                    clearInterval(this.captureInterval);
+                    this.captureInterval = null;
+                }
+                
+                if (this.ws) {
+                    this.ws.close();
+                    this.ws = null;
+                }
+                
+                this.clearCanvas();
+                
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                
+                this.updateConnectionStatus('Stopped', 'status-warning');
+                this.log('⏹️ Detection stopped', 'info');
+            }
+
+            connectWebSocket() {
+                const wsUrl = `ws://${window.location.host}/ws`;
+                this.ws = new WebSocket(wsUrl);
+
+                this.ws.onopen = () => {
+                    this.log('🔗 WebSocket connected - Starting advanced detection', 'info');
+                    this.updateConnectionStatus('Connected', 'status-good');
+                    this.startFrameCapture();
+                };
+
+                this.ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        this.handleWebSocketMessage(data);
+                    } catch (error) {
+                        this.log(`❌ WebSocket message error: ${error.message}`, 'error');
+                    }
+                };
+
+                this.ws.onclose = () => {
+                    this.log('⚠️ WebSocket disconnected', 'warning');
+                    this.updateConnectionStatus('Disconnected', 'status-error');
+                    this.isStreaming = false;
+                };
+
+                this.ws.onerror = (error) => {
+                    this.log(`❌ WebSocket error: ${error}`, 'error');
+                    this.updateConnectionStatus('Error', 'status-error');
+                };
+            }
+
+            startFrameCapture() {
+                this.isStreaming = true;
+                const interval = 1000 / this.targetFps;
+                
+                this.captureInterval = setInterval(() => {
+                    if (this.isStreaming && this.videoElement.readyState === 4) {
+                        this.captureFrameAdvanced();
+                    }
+                }, interval);
+                
+                this.log(`🎬 Advanced frame capture started at ${this.targetFps} FPS`, 'info');
+            }
+
+            captureFrameAdvanced() {
+                if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+                    return;
+                }
+
+                // Enhanced backpressure management
+                if (this.frameQueue.length >= this.maxQueueSize) {
+                    this.frameQueue.shift();
+                    this.log('⚠️ Frame dropped due to backpressure', 'warning');
+                }
+
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    canvas.width = this.videoElement.videoWidth;
+                    canvas.height = this.videoElement.videoHeight;
+                    
+                    // High-quality image capture
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(this.videoElement, 0, 0);
+                    
+                    // Use higher quality JPEG for better detection
+                    const imageData = canvas.toDataURL('image/jpeg', 0.95);
+                    const frameId = ++this.frameId;
+                    const captureTs = Date.now();
+                    
+                    const frameData = {
+                        type: 'frame',
+                        frame_id: frameId.toString(),
+                        capture_ts: captureTs,
+                        image: imageData,
+                        target_size: this.targetSize,
+                        client_info: {
+                            fps_target: this.targetFps,
+                            resolution: `${canvas.width}x${canvas.height}`,
+                            quality: 'high'
+                        }
+                    };
+                    
+                    this.frameQueue.push({
+                        frameId,
+                        captureTs,
+                        sent: false
+                    });
+                    
+                    this.performanceStats.framesSent++;
+                    this.ws.send(JSON.stringify(frameData));
+                    
+                } catch (error) {
+                    this.log(`❌ Frame capture error: ${error.message}`, 'error');
+                }
+            }
+
+            handleWebSocketMessage(data) {
+                switch (data.type) {
+                    case 'detections':
+                        this.handleAdvancedDetections(data);
+                        break;
+                    case 'metrics_update':
+                        this.updateLiveMetrics(data);
+                        break;
+                    case 'model_changed':
+                        this.updateCurrentModel(data.model);
+                        break;
+                    case 'confidence_changed':
+                        this.updateConfidenceDisplay(data.threshold);
+                        break;
+                    case 'pong':
+                        // Connection health confirmed
+                        break;
+                    default:
+                        this.log(`❓ Unknown message type: ${data.type}`, 'warning');
+                }
+            }
+
+            handleAdvancedDetections(data) {
+                const { detections, frame_id, capture_ts, inference_ts, processing_time_ms, detection_quality } = data;
+                
+                // Enhanced performance calculations
+                const now = Date.now();
+                const e2eLatency = now - capture_ts;
+                const networkLatency = data.recv_ts - capture_ts;
+                const serverLatency = inference_ts - data.recv_ts;
+                
+                // Update performance tracking
+                this.performanceStats.framesProcessed++;
+                this.performanceStats.totalLatency += e2eLatency;
+                this.performanceStats.detectionHistory.push({
+                    timestamp: now,
+                    count: detections.length,
+                    latency: e2eLatency,
+                    processing_time: processing_time_ms
+                });
+                
+                // Track unique classes
+                detections.forEach(det => {
+                    this.performanceStats.classHistory.add(det.label);
+                    this.performanceStats.confidenceHistory.push(det.score);
+                });
+                
+                // Keep only recent history (last 100 frames)
+                if (this.performanceStats.detectionHistory.length > 100) {
+                    this.performanceStats.detectionHistory.shift();
+                }
+                if (this.performanceStats.confidenceHistory.length > 1000) {
+                    this.performanceStats.confidenceHistory = this.performanceStats.confidenceHistory.slice(-1000);
+                }
+                
+                // Enhanced visualization
+                this.drawAdvancedDetections(detections);
+                this.updateAdvancedDetectionsList(detections);
+                this.updateQualityIndicators(detection_quality, e2eLatency, processing_time_ms);
+                
+                // Update real-time stats
+                document.getElementById('realTimeLatency').textContent = `${e2eLatency}ms`;
+                document.getElementById('processingTime').textContent = `${processing_time_ms.toFixed(1)}ms`;
+                document.getElementById('realTimeFps').textContent = this.calculateCurrentFPS().toFixed(1);
+                
+                // Remove processed frame from queue
+                this.frameQueue = this.frameQueue.filter(f => f.frameId !== parseInt(frame_id));
+                
+                this.log(`🎯 Frame ${frame_id}: ${detections.length} objects detected in ${processing_time_ms.toFixed(1)}ms (E2E: ${e2eLatency}ms)`, 'info');
+            }
+
+            drawAdvancedDetections(detections) {
+                this.clearCanvas();
+                
+                if (!detections || detections.length === 0) {
+                    return;
+                }
+
+                const canvas = this.canvas;
+                const ctx = this.ctx;
+                
+                // Enhanced drawing with dynamic colors
+                ctx.lineWidth = 3;
+                ctx.font = 'bold 16px Inter, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'top';
+
+                detections.forEach((detection, index) => {
+                    const { label, score, xmin, ymin, xmax, ymax, model_source } = detection;
+                    
+                    // Dynamic color based on confidence and class
+                    const confidence = score;
+                    let boxColor, textColor;
+                    
+                    if (confidence > 0.8) {
+                        boxColor = '#00ff88'; // High confidence - green
+                        textColor = '#00ff88';
+                    } else if (confidence > 0.6) {
+                        boxColor = '#00d4ff'; // Medium confidence - blue
+                        textColor = '#00d4ff';
+                    } else {
+                        boxColor = '#ffa502'; // Lower confidence - orange
+                        textColor = '#ffa502';
+                    }
+                    
+                    // Special color for ensemble results
+                    if (model_source === 'ensemble') {
+                        boxColor = '#ff00ff'; // Magenta for ensemble
+                        textColor = '#ff00ff';
+                    }
+                    
+                    // Convert normalized coordinates to canvas coordinates
+                    const x = xmin * canvas.width;
+                    const y = ymin * canvas.height;
+                    const width = (xmax - xmin) * canvas.width;
+                    const height = (ymax - ymin) * canvas.height;
+                    
+                    // Draw enhanced bounding box with glow effect
+                    ctx.strokeStyle = boxColor;
+                    ctx.shadowColor = boxColor;
+                    ctx.shadowBlur = 10;
+                    ctx.strokeRect(x, y, width, height);
+                    ctx.shadowBlur = 0;
+                    
+                    // Draw corner indicators for precision
+                    const cornerSize = 15;
+                    ctx.lineWidth = 4;
+                    
+                    // Top-left corner
+                    ctx.beginPath();
+                    ctx.moveTo(x, y + cornerSize);
+                    ctx.lineTo(x, y);
+                    ctx.lineTo(x + cornerSize, y);
+                    ctx.stroke();
+                    
+                    // Top-right corner
+                    ctx.beginPath();
+                    ctx.moveTo(x + width - cornerSize, y);
+                    ctx.lineTo(x + width, y);
+                    ctx.lineTo(x + width, y + cornerSize);
+                    ctx.stroke();
+                    
+                    // Bottom-left corner
+                    ctx.beginPath();
+                    ctx.moveTo(x, y + height - cornerSize);
+                    ctx.lineTo(x, y + height);
+                    ctx.lineTo(x + cornerSize, y + height);
+                    ctx.stroke();
+                    
+                    // Bottom-right corner
+                    ctx.beginPath();
+                    ctx.moveTo(x + width - cornerSize, y + height);
+                    ctx.lineTo(x + width, y + height);
+                    ctx.lineTo(x + width, y + height - cornerSize);
+                    ctx.stroke();
+                    
+                    ctx.lineWidth = 3;
+                    
+                    // Enhanced label with better visibility
+                    const text = `${label} ${(score * 100).toFixed(0)}%`;
+                    const metrics = ctx.measureText(text);
+                    const textHeight = 24;
+                    const padding = 8;
+                    
+                    // Label background with gradient
+                    const gradient = ctx.createLinearGradient(x, y - textHeight - padding, x, y);
+                    gradient.addColorStop(0, boxColor + 'E6');
+                    gradient.addColorStop(1, boxColor + '99');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(x, y - textHeight - padding, metrics.width + padding * 2, textHeight + padding);
+                    
+                    // Label border
+                    ctx.strokeStyle = boxColor;
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x, y - textHeight - padding, metrics.width + padding * 2, textHeight + padding);
+                    
+                    // Label text with shadow
+                    ctx.fillStyle = '#000000';
+                    ctx.fillText(text, x + padding + 1, y - textHeight + 1);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillText(text, x + padding, y - textHeight);
+                    
+                    // Add confidence indicator
+                    const confBarWidth = 50;
+                    const confBarHeight = 4;
+                    const confX = x + width - confBarWidth - 10;
+                    const confY = y + 10;
+                    
+                    // Confidence background
+                    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                    ctx.fillRect(confX, confY, confBarWidth, confBarHeight);
+                    
+                    // Confidence fill
+                    ctx.fillStyle = boxColor;
+                    ctx.fillRect(confX, confY, confBarWidth * confidence, confBarHeight);
+                });
+            }
+
+            clearCanvas() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+
+            updateAdvancedDetectionsList(detections) {
+                const container = document.getElementById('detectionList');
+                container.innerHTML = '';
+                
+                // Sort by confidence
+                const sortedDetections = [...detections].sort((a, b) => b.score - a.score);
+                
+                sortedDetections.slice(0, 15).forEach(detection => {
+                    const item = document.createElement('div');
+                    item.className = 'detection-item';
+                    
+                    const confidence = detection.score;
+                    let confidenceClass = 'detection-confidence-low';
+                    if (confidence > 0.8) confidenceClass = 'detection-confidence-high';
+                    else if (confidence > 0.6) confidenceClass = 'detection-confidence-medium';
+                    
+                    const modelBadge = detection.model_source === 'ensemble' 
+                        ? '<span class="ensemble-badge">ENSEMBLE</span>' 
+                        : `<span style="font-size: 0.7em; opacity: 0.7;">${detection.model_source}</span>`;
+                    
+                    item.innerHTML = `
+                        <div>
+                            <span class="detection-label">${detection.label}</span>
+                            <br>${modelBadge}
+                        </div>
+                        <div>
+                            <span class="detection-confidence ${confidenceClass}">${(confidence * 100).toFixed(0)}%</span>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            }
+
+            updateQualityIndicators(qualityData, latency, processingTime) {
+                if (!qualityData) return;
+                
+                const { total_detections, high_confidence, unique_classes, avg_confidence } = qualityData;
+                
+                // Update quality score (composite metric)
+                const qualityScore = this.calculateQualityScore(qualityData, latency, processingTime);
+                document.getElementById('qualityScore').textContent = `${qualityScore}%`;
+                document.getElementById('objectCount').textContent = total_detections;
+                document.getElementById('avgConfidence').textContent = avg_confidence ? `${(avg_confidence * 100).toFixed(0)}%` : '--';
+                
+                // Update quality bar
+                const qualityFill = document.getElementById('qualityFill');
+                qualityFill.style.width = `${qualityScore}%`;
+                
+                // Update status panel
+                document.getElementById('uniqueClasses').textContent = unique_classes;
+                
+                // Detection rate calculation
+                const recentFrames = this.performanceStats.detectionHistory.slice(-30);
+                const avgDetections = recentFrames.length > 0 
+                    ? (recentFrames.reduce((sum, frame) => sum + frame.count, 0) / recentFrames.length).toFixed(1)
+                    : '0';
+                document.getElementById('detectionRate').textContent = `${avgDetections}/frame`;
+            }
+
+            calculateQualityScore(qualityData, latency, processingTime) {
+                if (!qualityData) return 0;
+                
+                const { total_detections, high_confidence, avg_confidence } = qualityData;
+                
+                // Composite quality score
+                let score = 0;
+                
+                // Detection count score (0-30 points)
+                score += Math.min(30, total_detections * 3);
+                
+                // Confidence score (0-40 points)
+                score += (avg_confidence || 0) * 40;
+                
+                // Performance score (0-30 points)
+                const latencyScore = Math.max(0, 30 - (latency / 50)); // Penalize high latency
+                const processingScore = Math.max(0, 15 - (processingTime / 100)); // Penalize slow processing
+                score += latencyScore + processingScore;
+                
+                return Math.min(100, Math.round(score));
+            }
+
+            calculateCurrentFPS() {
+                const recent = this.performanceStats.detectionHistory.slice(-30);
+                if (recent.length < 2) return 0;
+                
+                const timeSpan = recent[recent.length - 1].timestamp - recent[0].timestamp;
+                return (recent.length - 1) * 1000 / timeSpan;
+            }
+
+            updateLiveMetrics(data) {
+                if (data.current_fps !== undefined) {
+                    const fps = data.current_fps;
+                    let performanceStatus = 'Excellent';
+                    let statusClass = 'status-good';
+                    
+                    if (fps < 10) {
+                        performanceStatus = 'Poor';
+                        statusClass = 'status-error';
+                    } else if (fps < 15) {
+                        performanceStatus = 'Fair';
+                        statusClass = 'status-warning';
+                    }
+                    
+                    document.getElementById('performanceStatus').textContent = performanceStatus;
+                    document.getElementById('performanceStatus').className = `status-value ${statusClass}`;
+                }
+                
+                if (data.model_used) {
+                    document.getElementById('currentModelDisplay').textContent = data.model_used;
+                }
+            }
+
+            async changeModel(modelName) {
+                try {
+                    this.log(`🔄 Changing model to: ${modelName}`, 'info');
+                    
+                    const response = await fetch('/set_model', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ model_name: modelName })
+                    });
+                    
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        this.log(`✅ Model changed to: ${modelName}`, 'info');
+                        this.showNotification(`Model switched to ${modelName}`, 'success');
+                    } else {
+                        this.log(`❌ Failed to change model: ${result.message}`, 'error');
+                        this.showNotification('Model change failed', 'error');
+                    }
+                } catch (error) {
+                    this.log(`❌ Model change error: ${error.message}`, 'error');
+                }
+            }
+
+            async changeConfidence(threshold) {
+                try {
+                    const response = await fetch('/set_confidence', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ threshold: threshold })
+                    });
+                    
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        this.log(`🎚️ Confidence threshold: ${threshold.toFixed(2)}`, 'info');
+                    }
+                } catch (error) {
+                    this.log(`❌ Confidence change error: ${error.message}`, 'error');
+                }
+            }
+
+            startMetricsUpdate() {
+                // Update metrics every 3 seconds
+                setInterval(() => this.loadAdvancedMetrics(), 3000);
+            }
+
+            async loadAdvancedMetrics() {
+                try {
+                    const [metricsResponse, statsResponse] = await Promise.all([
+                        fetch('/metrics'),
+                        fetch('/statistics')
+                    ]);
+                    
+                    const metrics = await metricsResponse.json();
+                    const stats = await statsResponse.json();
+                    
+                    this.updateMetricsDisplay(metrics);
+                    this.updateStatsDisplay(stats);
+                    
+                } catch (error) {
+                    // Silent error for metrics loading
+                }
+            }
+
+            updateMetricsDisplay(metrics) {
+                // Core metrics
+                document.getElementById('medianLatency').textContent = 
+                    metrics.median_latency_ms ? metrics.median_latency_ms.toFixed(0) : '--';
+                document.getElementById('p95Latency').textContent = 
+                    metrics.p95_latency_ms ? metrics.p95_latency_ms.toFixed(0) : '--';
+                document.getElementById('avgFps').textContent = 
+                    metrics.processed_fps ? metrics.processed_fps.toFixed(1) : '--';
+                document.getElementById('totalFrames').textContent = 
+                    metrics.total_frames || '--';
+                
+                // Advanced metrics
+                const avgConfidence = this.performanceStats.confidenceHistory.length > 0
+                    ? this.performanceStats.confidenceHistory.reduce((a, b) => a + b, 0) / this.performanceStats.confidenceHistory.length
+                    : 0;
+                
+                document.getElementById('detectionAccuracy').textContent = `${(avgConfidence * 100).toFixed(0)}%`;
+                
+                const totalObjects = Object.values(metrics.top_detected_classes || {}).reduce((a, b) => a + b, 0);
+                document.getElementById('totalObjects').textContent = totalObjects || '--';
+            }
+
+            updateStatsDisplay(stats) {
+                // Class distribution
+                const classContainer = document.getElementById('classDistribution');
+                classContainer.innerHTML = '';
+                
+                const topClasses = Object.entries(stats.class_detection_counts || {})
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 10);
+                
+                topClasses.forEach(([className, count]) => {
+                    const tag = document.createElement('span');
+                    tag.className = 'class-tag';
+                    tag.textContent = `${className} (${count})`;
+                    classContainer.appendChild(tag);
+                });
+                
+                // Model performance
+                const modelContainer = document.getElementById('modelPerformanceStats');
+                modelContainer.innerHTML = '';
+                
+                Object.entries(stats.model_performance || {}).forEach(([model, perf]) => {
+                    const perfDiv = document.createElement('div');
+                    perfDiv.style.cssText = 'margin-bottom: 8px; font-size: 0.9em;';
+                    perfDiv.innerHTML = `
+                        <strong>${model}:</strong> ${perf.avg_time_ms?.toFixed(1) || '--'}ms 
+                        <span style="opacity: 0.7;">(${perf.frames_processed || 0} frames)</span>
+                    `;
+                    modelContainer.appendChild(perfDiv);
+                });
+                
+                // Confidence statistics
+                const confContainer = document.getElementById('confidenceStats');
+                confContainer.innerHTML = '';
+                
+                const topConfClasses = Object.entries(stats.confidence_stats || {})
+                    .sort(([,a], [,b]) => b.avg_confidence - a.avg_confidence)
+                    .slice(0, 5);
+                
+                topConfClasses.forEach(([className, confStats]) => {
+                    const confDiv = document.createElement('div');
+                    confDiv.style.cssText = 'margin-bottom: 8px; font-size: 0.9em;';
+                    confDiv.innerHTML = `
+                        <strong>${className}:</strong> ${(confStats.avg_confidence * 100).toFixed(0)}% avg
+                        <span style="opacity: 0.7;">(${confStats.min_confidence.toFixed(2)}-${confStats.max_confidence.toFixed(2)})</span>
+                    `;
+                    confContainer.appendChild(confDiv);
+                });
+            }
+
+            async resetMetrics() {
+                try {
+                    const response = await fetch('/reset_metrics', { method: 'POST' });
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        this.log('🔄 All metrics reset successfully', 'info');
+                        this.performanceStats = {
+                            framesSent: 0,
+                            framesProcessed: 0,
+                            totalLatency: 0,
+                            detectionHistory: [],
+                            classHistory: new Set(),
+                            confidenceHistory: []
+                        };
+                        this.loadAdvancedMetrics();
+                        this.showNotification('Metrics reset successfully', 'success');
+                    }
+                } catch (error) {
+                    this.log(`❌ Reset metrics error: ${error.message}`, 'error');
+                }
+            }
+
+            async saveMetrics() {
+                try {
+                    const response = await fetch('/save_metrics', { method: 'POST' });
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        this.log(`💾 Comprehensive metrics saved: ${result.file}`, 'info');
+                        this.showNotification(`Data saved to ${result.file}`, 'success');
+                    }
+                } catch (error) {
+                    this.log(`❌ Save metrics error: ${error.message}`, 'error');
+                    this.showNotification('Failed to save metrics', 'error');
+                }
+            }
+
+            updateConnectionStatus(status, className) {
+                const element = document.getElementById('connectionStatus');
+                element.textContent = status;
+                element.className = `status-value ${className}`;
+            }
+
+            updateCurrentModel(modelName) {
+                document.getElementById('currentModel').textContent = modelName;
+                document.getElementById('modelSelect').value = modelName;
+                document.getElementById('currentModelDisplay').textContent = modelName;
+            }
+
+            updateConfidenceDisplay(threshold) {
+                document.getElementById('confidenceValue').textContent = threshold.toFixed(2);
+                document.getElementById('confidenceSlider').value = threshold;
+                this.updateConfidenceMarker();
+            }
+
+            showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideIn 0.5s ease-out reverse';
+                    setTimeout(() => notification.remove(), 500);
+                }, 3000);
+            }
+
+            log(message, type = 'info') {
+                const container = document.getElementById('logContainer');
+                const entry = document.createElement('div');
+                entry.className = `log-entry log-${type}`;
+                
+                const timestamp = new Date().toLocaleTimeString();
+                const icon = type === 'info' ? '📋' : type === 'warning' ? '⚠️' : '❌';
+                entry.textContent = `[${timestamp}] ${icon} ${message}`;
+                
+                container.appendChild(entry);
+                
+                // Keep only last 100 log entries
+                while (container.children.length > 100) {
+                    container.removeChild(container.firstChild);
+                }
+                
+                // Auto-scroll to bottom
+                container.scrollTop = container.scrollHeight;
+            }
+
+            // Enhanced heartbeat with performance monitoring
+            startHeartbeat() {
+                setInterval(() => {
+                    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                        this.ws.send(JSON.stringify({ 
+                            type: 'ping',
+                            client_stats: {
+                                frames_sent: this.performanceStats.framesSent,
+                                frames_processed: this.performanceStats.framesProcessed,
+                                queue_size: this.frameQueue.length
+                            }
+                        }));
+                    }
+                }, 30000);
+            }
+        }
+
+        // Initialize application
+        let detectionClient;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            detectionClient = new UltraAdvancedDetectionClient();
+            detectionClient.startHeartbeat();
+            
+            // Add loading animation
+            document.body.style.animation = 'fadeIn 1s ease-in';
+        });
+
+        // Enhanced error handling
+        window.addEventListener('error', (e) => {
+            console.error('Global error:', e.error);
+            if (detectionClient) {
+                detectionClient.log(`💥 System error: ${e.error.message}`, 'error');
+            }
+        });
+
+        // Performance monitoring
+        let performanceMonitor = {
+            frameDrops: 0,
+            lastFrameTime: 0,
+            memoryUsage: 0,
+            
+            checkPerformance() {
+                const now = performance.now();
+                
+                // Check frame timing
+                if (this.lastFrameTime > 0) {
+                    const timeDiff = now - this.lastFrameTime;
+                    if (timeDiff > 300) {
+                        this.frameDrops++;
+                        if (detectionClient) {
+                            detectionClient.log(`⚠️ Performance warning: ${timeDiff.toFixed(0)}ms frame gap`, 'warning');
+                        }
+                    }
+                }
+                this.lastFrameTime = now;
+                
+                // Monitor memory usage
+                if (performance.memory) {
+                    const currentMemory = performance.memory.usedJSHeapSize / 1024 / 1024;
+                    if (currentMemory > this.memoryUsage + 50) { // 50MB increase
+                        if (detectionClient) {
+                            detectionClient.log(`📊 Memory usage: ${currentMemory.toFixed(1)}MB`, 'info');
+                        }
+                    }
+                    this.memoryUsage = currentMemory;
+                }
+            }
+        };
+
+        // Monitor performance every 5 seconds
+        setInterval(() => performanceMonitor.checkPerformance(), 5000);
+
+        // Handle page visibility for optimization
+        document.addEventListener('visibilitychange', () => {
+            if (detectionClient) {
+                if (document.hidden) {
+                    detectionClient.log('📱 Page hidden - optimizing performance', 'info');
+                    // Could reduce FPS when not visible
+                    if (detectionClient.targetFps > 10) {
+                        detectionClient.targetFps = Math.max(5, detectionClient.targetFps / 2);
+                    }
+                } else {
+                    detectionClient.log('👀 Page visible - full performance mode', 'info');
+                    detectionClient.targetFps = 20; // Restore full FPS
+                }
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', (e) => {
+            if (detectionClient && detectionClient.isStreaming) {
+                detectionClient.stopCamera();
+            }
+        });
+
+        // Advanced keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (!detectionClient) return;
+            
+            switch(e.key) {
+                case ' ': // Spacebar - toggle detection
+                    e.preventDefault();
+                    if (detectionClient.isStreaming) {
+                        detectionClient.stopCamera();
+                    } else {
+                        detectionClient.startCamera();
+                    }
+                    break;
+                case 'r': // R - reset metrics
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        detectionClient.resetMetrics();
+                    }
+                    break;
+                case 's': // S - save metrics
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        detectionClient.saveMetrics();
+                    }
+                    break;
+                case 'ArrowUp': // Increase confidence
+                    e.preventDefault();
+                    const currentConf = parseFloat(document.getElementById('confidenceSlider').value);
+                    const newConf = Math.min(1.0, currentConf + 0.05);
+                    document.getElementById('confidenceSlider').value = newConf;
+                    document.getElementById('confidenceValue').textContent = newConf.toFixed(2);
+                    detectionClient.updateConfidenceMarker();
+                    detectionClient.changeConfidence(newConf);
+                    break;
+                case 'ArrowDown': // Decrease confidence
+                    e.preventDefault();
+                    const currentConf2 = parseFloat(document.getElementById('confidenceSlider').value);
+                    const newConf2 = Math.max(0.05, currentConf2 - 0.05);
+                    document.getElementById('confidenceSlider').value = newConf2;
+                    document.getElementById('confidenceValue').textContent = newConf2.toFixed(2);
+                    detectionClient.updateConfidenceMarker();
+                    detectionClient.changeConfidence(newConf2);
+                    break;
+            }
+        });
+
+        // Touch gestures for mobile optimization
+        let touchStartY = 0;
+        let touchStartX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            if (!detectionClient) return;
+            
+            const touchEndY = e.changedTouches[0].clientY;
+            const touchEndX = e.changedTouches[0].clientX;
+            const deltaY = touchStartY - touchEndY;
+            const deltaX = touchStartX - touchEndX;
+            
+            // Swipe gestures
+            if (Math.abs(deltaY) > 50 && Math.abs(deltaX) < 100) {
+                if (deltaY > 0) {
+                    // Swipe up - increase confidence
+                    const slider = document.getElementById('confidenceSlider');
+                    const newValue = Math.min(1.0, parseFloat(slider.value) + 0.1);
+                    slider.value = newValue;
+                    document.getElementById('confidenceValue').textContent = newValue.toFixed(2);
+                    detectionClient.updateConfidenceMarker();
+                    detectionClient.changeConfidence(newValue);
+                } else {
+                    // Swipe down - decrease confidence
+                    const slider = document.getElementById('confidenceSlider');
+                    const newValue = Math.max(0.05, parseFloat(slider.value) - 0.1);
+                    slider.value = newValue;
+                    document.getElementById('confidenceValue').textContent = newValue.toFixed(2);
+                    detectionClient.updateConfidenceMarker();
+                    detectionClient.changeConfidence(newValue);
+                }
+            }
+        });
+
+        // Auto-optimization based on device capabilities
+        function optimizeForDevice() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isLowEnd = navigator.hardwareConcurrency <= 4;
+            
+            if (isMobile || isLowEnd) {
+                // Optimize for mobile/low-end devices
+                if (detectionClient) {
+                    detectionClient.targetFps = 10;
+                    detectionClient.targetSize = 640;
+                    detectionClient.maxQueueSize = 2;
+                    detectionClient.log('📱 Mobile optimization enabled', 'info');
+                }
+                
+                // Set default to faster model
+                document.getElementById('modelSelect').value = 'yolov8s';
+                document.getElementById('targetSizeSelect').value = '640';
+            } else {
+                detectionClient?.log('🖥️ Desktop optimization enabled', 'info');
+            }
+        }
+
+        // Initialize optimizations
+        setTimeout(optimizeForDevice, 1000);
+
+        // Preload notification
+        setTimeout(() => {
+            if (detectionClient) {
+                detectionClient.showNotification('🎯 Advanced Detection System Ready!', 'success');
+            }
+        }, 2000);
+
+        // Add visual feedback for interactions
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                // Add click effect
+                e.target.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    e.target.style.transform = '';
+                }, 150);
+            }
+        });
+    </script>
+</body>
+</html>
+
+
